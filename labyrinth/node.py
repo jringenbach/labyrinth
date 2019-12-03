@@ -5,11 +5,12 @@ from labyrinth.element import Element
 class Node:
 
 
-    def __init__(self, num):
+    def __init__(self, num, labyrinth_position=None):
         """Node which is a cell in the labyrinth
         
         self.num (int) : unique identifier of the node
         self.connected_to (list) : list of nodes this node is connected to
+        self.labyrinth_position (tuple) : tuple indicating the position of the node in the labyrinth (line, column)
         self.list_elements (list) : list of elements on this node
         self.status (int) : status of the node during the BFS algorithm. 
             0 = Unvisited, 1 = seen connected with an other node, 2 = analyzed
@@ -18,6 +19,7 @@ class Node:
 
         self.num = num
         self.connected_to = list()
+        self.labyrinth_position = labyrinth_position
         self.list_elements = list()
         self.status = 0
         self.distance_from_start_point = 0
