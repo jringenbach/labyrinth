@@ -11,7 +11,8 @@ class Node:
         self.num (int) : unique identifier of the node
         self.connected_to (list) : list of nodes this node is connected to
         self.list_elements (list) : list of elements on this node
-        self.status (int) : status of the node during the BFS algorithm. 0 = Unvisited, 1 = visited, 2=over
+        self.status (int) : status of the node during the BFS algorithm. 
+            0 = Unvisited, 1 = seen connected with an other node, 2 = analyzed
         self.distance_from_start_point : distance from the start point chosen during BFS algorithm
         self.pere (Node) : node from which we reached this node"""
 
