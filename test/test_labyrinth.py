@@ -12,9 +12,9 @@ def test_breadth_first_search():
     node_4 = Node(4)
     number_of_nodes = 4
 
-    list_nodes = [node_1, node_2, node_3, node_4]
-    labyrinth.list_nodes = list_nodes
-    labyrinth.initialization_list_nodes(number_of_nodes)
+    list_empty_nodes = [node_1, node_2, node_3, node_4]
+    labyrinth.list_empty_nodes = list_empty_nodes
+    labyrinth.initialization_list_empty_nodes(number_of_nodes)
 
     #We represent the graph |1| - |2| - |3| - |4|
     node_1.set_connected_to(node_2)
@@ -32,13 +32,13 @@ def test_breadth_first_search():
     assert node_4.distance_from_start_point == 2
 
 
-def test_equals_list_nodes():
-    """Test the method Labyrinth.equals_list_nodes()"""
+def test_equals_list_empty_nodes():
+    """Test the method Labyrinth.equals_list_empty_nodes()"""
 
     #We create our labyrinth that will calculate connections between its nodes
     lab = Labyrinth()
     lab.labyrinth = [["X", "X", "X"], ["", "", ""], ["X","X", "X"]]
-    lab.set_list_nodes_from_labyrinth()
+    lab.set_datas_from_labyrinth()
     lab.set_connection_between_nodes()
 
     #We set custom nodes with their connections between them
@@ -48,12 +48,12 @@ def test_equals_list_nodes():
     node_1.connected_to = [node_2]
     node_2.connected_to = [node_1, node_3]
     node_3.connected_to = [node_2]
-    list_nodes = [node_1, node_2, node_3]
-    list_nodes_2 = [node_1, node_2]
+    list_empty_nodes = [node_1, node_2, node_3]
+    list_empty_nodes_2 = [node_1, node_2]
 
     #We test if the two lists of nodes are equal
-    assert lab.equals_list_nodes(list_nodes) == True
-    assert lab.equals_list_nodes(list_nodes_2) == False
+    assert lab.equals_list_empty_nodes(list_empty_nodes) == True
+    assert lab.equals_list_empty_nodes(list_empty_nodes_2) == False
 
 
 
@@ -72,7 +72,7 @@ def test_set_connection_between_nodes():
     #Labyrinth on which we will test our method set_connection_between_nodes
     lab = Labyrinth()
     lab.labyrinth = [["X", "", "X"], ["", "", ""], ["X","", "X"]]
-    lab.set_list_nodes_from_labyrinth()
+    lab.set_datas_from_labyrinth()
     lab.set_connection_between_nodes()
 
     #We create our nodes for the test
@@ -88,18 +88,18 @@ def test_set_connection_between_nodes():
     node_3.connected_to = [node_1, node_2, node_4, node_5]
     node_4.connected_to = [node_3]
     node_5.connected_to = [node_3]
-    list_nodes_test = [node_1, node_2, node_3, node_4, node_5]
+    list_empty_nodes_test = [node_1, node_2, node_3, node_4, node_5]
 
     lab.set_connection_between_nodes()
-    assert lab.equals_list_nodes(list_nodes_test) == True
+    assert lab.equals_list_empty_nodes(list_empty_nodes_test) == True
 
 
-def test_set_list_of_nodes_from_labyrinth():
+def test_set_datas_from_labyrinth():
     """Test the method Labyrinth.set_list_of_nodes_from_labyrinth()"""
 
     lab = Labyrinth()
     lab.labyrinth = [["X", "X", "X"], ["X", "", "X"], ["X","X", "X"]]
-    lab.set_list_nodes_from_labyrinth()
-    node_1 = Node(1, (1,1))
+    lab.set_datas_from_labyrinth()
+    node_1 = Node(5, (1,1))
 
-    assert lab.list_nodes[0].num == node_1.num and lab.list_nodes[0].labyrinth_position == node_1.labyrinth_position
+    assert lab.list_empty_nodes[0].num == node_1.num and lab.list_empty_nodes[0].labyrinth_position == node_1.labyrinth_position
