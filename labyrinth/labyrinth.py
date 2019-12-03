@@ -123,6 +123,12 @@ class Labyrinth:
 
 
 
+    def move_to_exit(self):
+        """Move the Agent through the labyrinth to reach the exit point"""
+        pass
+
+
+
     def print_list_of_nodes(self):
         """Print details of every node with information collected after BFS algorithm"""
 
@@ -188,22 +194,27 @@ class Labyrinth:
             row = list()
             for j, column in enumerate(line):
                 node = Node(node_number, (i,j))
+
+                #If it is an empty space
                 if column == "":
                     element = Element("Empty", " ", False)
                     node.elements = [element]
                     self.list_empty_nodes.append(node)
 
+                #If this is the start point
                 elif column == "S":
                     element = Element("Start", "S", False)
                     agent = Element("Agent", "A", False)
                     node.elements = [element, agent]
                     self.start_point = node
 
+                #If this is the exit
                 elif column == "E":
                     element = Element("Exit", "E", False)
                     node.elements = [element]
                     self.exit_point = node
 
+                #If this is a wall
                 elif column == "X":
                     element = Element("Wall", "X", True)
                     node.elements = [element]
