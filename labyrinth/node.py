@@ -39,6 +39,28 @@ class Node:
 
 
 
+    def connected_to_is_equal(self, another_node):
+        """Test if the node is connected to the same nodes as the another_node. Return True if it is, False else.
+        
+        another_node (Node) : The other Node Object"""
+
+        if len(self.connected_to) == len(another_node.connected_to):
+            self_connected_to = sorted(self.connected_to, key = lambda x : x.num)
+            another_node_connected_to = sorted(another_node.connected_to, key = lambda x : x.num)
+
+            for i, node in enumerate(self_connected_to):
+                if not node.num_is_equal_to(another_node_connected_to[i]) or \
+                not node.position_is_equal_to(another_node_connected_to[i]):
+                    return False
+
+            return True
+
+
+        else:
+            return False
+
+
+
     def find_element(self, element_to_find):
         """Find an element in the list self.elements and returns it if it has been found
     
@@ -80,7 +102,20 @@ class Node:
 
 
 
-    def is_equal_to(self, other_node):
+    def is_equal_to(self, another_node):
+        """Test if the attributes of both nodes are equal"""
+
+        if self.num == another_node.num and \
+        self.labyrinth_position == another_node.labyrinth_position and \
+        self.connected_to == another_node.connected_to:
+            return True
+
+        else:
+            return False
+
+
+
+    def num_is_equal_to(self, other_node):
         """Test if this node is equal to an other node. Return True if it is, False else.
         
         other_node (Node) : node we test"""
