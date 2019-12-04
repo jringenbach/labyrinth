@@ -34,6 +34,25 @@ def test_breadth_first_search():
     assert node_4.distance_from_start_point == 2
 
 
+
+def test_update_statistics_after_move():
+    """Test the method Labyrinth.change_statistics_after_move(node_to_move_on)"""
+
+    lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    for i in range(0,2):
+        lab.breadth_first_search()
+        node_to_move_on = lab.find_node_to_move_on(lab.exit_point)
+        lab.update_statistics_after_move(node_to_move_on)
+        lab.set_datas_after_move(node_to_move_on)
+
+    distance_between_agent_and_end_point_test = 3
+    number_of_moves_done_by_agent = 2
+
+    assert lab.labyrinth_statistics["distance_between_agent_and_end_point"] == distance_between_agent_and_end_point_test
+    assert lab.labyrinth_statistics["number_of_moves_done_by_agent"] == number_of_moves_done_by_agent
+
+
+
 def test_equals_list_nodes():
     """Test the method Labyrinth.equals_list_empty_nodes()"""
 

@@ -40,15 +40,11 @@ class Labyrinth:
         #If a file_name is given to get the labyrinth, we get the labyrinth and set the list of nodes
         if self.file_name is not None and len(labyrinth) == 0:
             self.labyrinth = self.get_labyrinth_from_file_name(self.file_name)
-            self.set_datas_from_labyrinth()
-            self.set_connection_between_nodes()
-            self.set_labyrinth_statistics_from_labyrinth()
+            self.initialization_labyrinth()
 
         #If a labyrinth is given as its list form in parameter of __init__
         elif len(labyrinth) > 0 and self.file_name is None:
-            self.set_datas_from_labyrinth()
-            self.set_connection_between_nodes()
-            self.set_labyrinth_statistics_from_labyrinth()
+            self.initialization_labyrinth()
 
               
 
@@ -142,6 +138,18 @@ class Labyrinth:
 
 
 
+    def initialization_labyrinth(self):
+        """Initialize all the parameters of the labyrinth. 
+        1. Create the list of nodes of the labyrinth.
+        2. Calculate the connections between the nodes
+        3. Set the labyrinth statistics"""
+
+        self.set_datas_from_labyrinth()
+        self.set_connection_between_nodes()
+        self.set_labyrinth_statistics_from_labyrinth()
+
+
+
     def initialization_list_empty_nodes(self, n):
         """Initialize all the nodes in self.list_empty_nodes for the BFS algorithm
         
@@ -179,6 +187,7 @@ class Labyrinth:
             #We use breadth first search to create the tree with the distance of every node from the agent position
             self.breadth_first_search()
             node_to_move_on = self.find_node_to_move_on(self.exit_point)
+            self.update_statistics_after_move(node_to_move_on)
             self.set_datas_after_move(node_to_move_on)
 
             #We clear the terminal to print the labyrinth with the new position of the agent
@@ -340,5 +349,10 @@ class Labyrinth:
 
 
 
+    def update_statistics_after_move(self, node_to_move_on):
+        """Change the statistics that vary with the movement of the agent through the labyrinth"""
 
-
+        distance_exit = self.exit_point.distance_from_start_point
+        distance_node_to_move_on = node_to_move_on.distance_from_start_point
+        self.labyrinth_statistics["distance_between_agent_and_end_point"] = distance_exit - distance_node_to_move_on
+        self.labyrinth_statistics["number_of_moves_done_by_agent"] += 1
