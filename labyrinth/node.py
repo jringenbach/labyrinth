@@ -25,7 +25,7 @@ class Node:
         self.status = 0
         self.distance_from_start_point = 0
         self.pere = None
-        self.elements = None
+        self.elements = elements
 
 
 
@@ -39,6 +39,47 @@ class Node:
 
 
 
+    def find_element(self, element_to_find):
+        """Find an element in the list self.elements and returns it if it has been found
+    
+        element_to_find (Element) : Element object that we want to find in self.elements"""
+
+        for element in self.elements:
+            if element == element_to_find:
+                return element
+        
+        return 0
+
+
+
+    def find_element_by_parameter(self, parameter, value):
+        """Find an element in the list self.elements by its parameters and returns it
+        
+        parameter (string) : parameter we want to test
+        value (string) : value of this parameter we want to find"""
+
+        #If the parameter is equal to one of the attribute of the Element Object
+        if parameter in ["name", "symbol", "block_agent"]:
+            if parameter == "name":
+                for element in self.elements:
+                    if element.name == value:
+                        return element
+
+            elif parameter == "symbol":
+                for element in self.elements:
+                    if element.symbol == value:
+                        return element
+
+            elif parameter == "block_agent":
+                for element in self.elements:
+                    if element.block_agent == value:
+                        return element
+
+        else:
+            return 0
+
+
+
     def is_equal_to(self, other_node):
         """Test if this node is equal to an other node. Return True if it is, False else.
         
@@ -48,6 +89,15 @@ class Node:
             return True
         else:
             return False
+
+
+
+    def remove_element(self, element_to_remove):
+        """Remove an element from the list of elements of this node.
+        
+        element_to_remove (Element) : Element Object to remove from this node.elements list"""
+
+        self.elements.remove(element_to_remove)
 
 
 

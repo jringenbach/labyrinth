@@ -57,12 +57,45 @@ def test_equals_list_empty_nodes():
 
 
 
+def test_find_node_to_move_on():
+    """Test the method Labyrinth.find_node_to_move_on(self, node)"""
+    lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    node_to_test = None
+
+    #We get the node we are supposed to get with find_node_to_move_on without using the method
+    for node in lab.list_empty_nodes:
+        if node.labyrinth_position == (2, 1):
+            node_to_test = node
+
+    #We get the node we are supposed to get with find_node_to_move_on
+    lab.initialization_list_empty_nodes(lab.total_node)
+    lab.breadth_first_search(lab.agent_node)
+    node_to_move_on = lab.find_node_to_move_on(lab.exit_point)
+
+    assert node_to_test == node_to_move_on
+
+
+
+
 def test_get_labyrinth_from_file_name():
     """Test the method Labyrinth.get_labyrinth_from_file_name"""
 
     lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
-    labyrinth_to_test = [["X", "X", "X"], ["X", "", "X"], ["X","X", "X"]]
+    labyrinth_to_test = [["X", "X", "X", "X", "X"], ["X", "S", "", "", "X"], ["X", "", "X", "", "X"]]
+    labyrinth_to_test.append(["X", "", "X", "X", "X"])
+    labyrinth_to_test.append(["X", "", "", "E", "X"])
+    labyrinth_to_test.append(["X", "X", "X", "X", "X"])
     assert lab.labyrinth == labyrinth_to_test
+
+
+
+def test_move_to_exit():
+    """Test the method move to exit of the labyrinth. At the end, the agent position must be on the node with the element Exit"""
+
+    lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    lab.move_to_exit()
+
+    assert lab.agent_node.labyrinth_position == lab.exit_point.labyrinth_position
 
 
 
@@ -92,6 +125,27 @@ def test_set_connection_between_nodes():
 
     lab.set_connection_between_nodes()
     assert lab.equals_list_empty_nodes(list_empty_nodes_test) == True
+
+
+
+def test_set_datas_after_move():
+    """Test the method Node.set_datas_after_move(node_to_move_on)"""
+
+    node_to_test = None
+
+    #We use set_datast_after_move just only after one move through the labyrinth
+    lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    lab.breadth_first_search(lab.agent_node)
+    node_to_move_on = lab.find_node_to_move_on(lab.exit_point)
+    lab.set_datas_after_move(node_to_move_on)
+
+    #We get the node where the agent is supposed to go after one move depending on the breadth first search algorithm
+    for node in lab.list_empty_nodes:
+        if node.labyrinth_position == (2,1):
+            node_to_test = node
+
+    assert node_to_test.elements == lab.agent_node.elements
+
 
 
 def test_set_datas_from_labyrinth():

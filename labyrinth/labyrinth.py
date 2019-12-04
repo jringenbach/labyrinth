@@ -18,8 +18,10 @@ class Labyrinth:
         labyrinth_nodes (list) : list of each Node object on each line
         list_empty_nodes (list) : list of Node objects containg empty spaces
         list_wall_nodes (list) : list of Node objects containing walls
-        start_point (tuple) : coordinates of the start point of the labyrinth
-        exit_point (tuple) : coordinates of the exit of the labyrinth
+        start_point (Node) : Node of the start point of the labyrinth
+        exit_point (Node) : Node of the exit of the labyrinth
+        agent_node (Node) : Node where the agent is in the labyrinth
+        total_node (int) : Total number of nodes in the labyrinth
         """
 
         self.file_name = file_name
@@ -27,8 +29,10 @@ class Labyrinth:
         self.list_wall_nodes = list()
         self.labyrinth = list()
         self.labyrinth_nodes = list()
-        self.start_point = tuple()
-        self.end_point = tuple()
+        self.start_point = None
+        self.agent_node = None
+        self.end_point = None
+        self.total_node = 0
 
         #If a file_name is given to get the labyrinth, we get the labyrinth and set the list of nodes
         if self.file_name is not None:
@@ -51,10 +55,16 @@ class Labyrinth:
 
 
 
-    def breadth_first_search(self, start_point):
+    def breadth_first_search(self, start_point=None):
         """BFS algorithm indicating the shortest distance between start_point and each node
         
         start_point (Node object) : Node where we start the algorithm"""
+
+        self.initialization_list_empty_nodes(self.total_node)
+        
+        #If start_point is None, we set it to the node where the agent is in the labyrinth
+        if start_point is None:
+            start_point = self.agent_node
 
         #Initial situation of the algorithm
         queue = [start_point]
@@ -72,6 +82,18 @@ class Labyrinth:
                     queue.append(node)
             queue.pop(0)
             node_to_analyze.status = 2
+
+
+    
+    def find_node_to_move_on(self, node):
+        """This method is looking for the node where the agent must move depending on the breadth first search done
+        just before"""
+
+        while(node.pere is not None and node.pere.distance_from_start_point > 0):
+            print(node.labyrinth_position)
+            node = node.pere
+
+        return node
 
 
 
@@ -125,7 +147,13 @@ class Labyrinth:
 
     def move_to_exit(self):
         """Move the Agent through the labyrinth to reach the exit point"""
-        pass
+        
+        #While the agent is not on the exit, we keep going through the labyrinth
+        while self.agent_node.labyrinth_position != self.exit_point.labyrinth_position:
+            self.breadth_first_search()
+            node_to_move_on = self.find_node_to_move_on(self.exit_point)
+            self.set_datas_after_move(node_to_move_on)
+
 
 
 
@@ -185,6 +213,20 @@ class Labyrinth:
 
 
 
+    def set_datas_after_move(self, node_to_move_on):
+        """Change the attributes of the labyrinth depending on the node where the agent moved
+        
+        node_to_move_on (Node) : node on which the agent must move"""
+
+        #We change the agent element from the node where it was to the node where it is
+        agent_element = self.agent_node.find_element_by_parameter(parameter="symbol", value="A")
+        self.agent_node.remove_element(agent_element)
+        node_to_move_on.elements.append(agent_element)
+        self.agent_node = node_to_move_on
+
+
+
+
     def set_datas_from_labyrinth(self):
         """Create the list of nodes depending on the labyrinth read in a xls file and set self.start_point and self.exit_point"""
 
@@ -207,12 +249,15 @@ class Labyrinth:
                     agent = Element("Agent", "A", False)
                     node.elements = [element, agent]
                     self.start_point = node
+                    self.agent_node = node
+                    self.list_empty_nodes.append(node)
 
                 #If this is the exit
                 elif column == "E":
                     element = Element("Exit", "E", False)
                     node.elements = [element]
                     self.exit_point = node
+                    self.list_empty_nodes.append(node)
 
                 #If this is a wall
                 elif column == "X":
@@ -222,6 +267,7 @@ class Labyrinth:
 
                 row.append(node)
                 node_number += 1
+                self.total_node += 1
             self.labyrinth_nodes.append(row)
 
 
