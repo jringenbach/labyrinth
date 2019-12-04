@@ -1,9 +1,12 @@
 #Python libraries
+import os
+import platform
+import time
 import xlrd
 
 #Project libraries
-from labyrinth.node import Node
 from labyrinth.element import Element
+from labyrinth.node import Node
 
 
 
@@ -163,15 +166,24 @@ class Labyrinth:
 
 
 
-    def move_to_exit(self):
-        """Move the Agent through the labyrinth to reach the exit point"""
+    def move_to_exit(self, time_move=0.25):
+        """Move the Agent through the labyrinth to reach the exit point
+        
+        time_move (int) : time to wait between each move in the labyrinth"""
         
         #While the agent is not on the exit, we keep going through the labyrinth
         while self.agent_node.labyrinth_position != self.exit_point.labyrinth_position:
+
+            #We use breadth first search to create the tree with the distance of every node from the agent position
             self.breadth_first_search()
             node_to_move_on = self.find_node_to_move_on(self.exit_point)
             self.set_datas_after_move(node_to_move_on)
+
+            #We clear the terminal to print the labyrinth with the new position of the agent
+            clear = "cls" if platform.system() == "Windows" else "clear"
+            os.system(clear)
             self.print_labyrinth()
+            time.sleep(time_move)
 
 
 
