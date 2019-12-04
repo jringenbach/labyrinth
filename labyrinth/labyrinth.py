@@ -24,7 +24,7 @@ class Labyrinth:
         start_point (Node) : Node of the start point of the labyrinth
         exit_point (Node) : Node of the exit of the labyrinth
         agent_node (Node) : Node where the agent is in the labyrinth
-        total_node (int) : Total number of nodes in the labyrinth
+        labyrinth_statistics (dict) : dictionary containing statistics about the labyrinth
         """
 
         self.file_name = file_name
@@ -35,27 +35,29 @@ class Labyrinth:
         self.start_point = None
         self.agent_node = None
         self.end_point = None
-        self.total_node = 0
+        self.labyrinth_statistics = self.set_empty_labyrinth_statistics()
 
         #If a file_name is given to get the labyrinth, we get the labyrinth and set the list of nodes
         if self.file_name is not None and len(labyrinth) == 0:
             self.labyrinth = self.get_labyrinth_from_file_name(self.file_name)
             self.set_datas_from_labyrinth()
             self.set_connection_between_nodes()
+            self.set_labyrinth_statistics_from_labyrinth()
 
         #If a labyrinth is given as its list form in parameter of __init__
         elif len(labyrinth) > 0 and self.file_name is None:
             self.set_datas_from_labyrinth()
-            self.set_connection_between_nodes()          
+            self.set_connection_between_nodes()
+            self.set_labyrinth_statistics_from_labyrinth()
 
-
+              
 
     def breadth_first_search(self, start_point=None):
         """BFS algorithm indicating the shortest distance between start_point and each node
         
         start_point (Node object) : Node where we start the algorithm"""
 
-        self.initialization_list_empty_nodes(self.total_node)
+        self.initialization_list_empty_nodes(self.labyrinth_statistics["number_of_nodes"])
         
         #If start_point is None, we set it to the node where the agent is in the labyrinth
         if start_point is None:
@@ -295,8 +297,46 @@ class Labyrinth:
 
                 row.append(node)
                 node_number += 1
-                self.total_node += 1
+                self.labyrinth_statistics["number_of_nodes"] += 1
             self.labyrinth_nodes.append(row)
+
+
+
+    def set_empty_labyrinth_statistics(self):
+        """Set the dictionary for the attributes labyrinth_statistics and returns it"""
+
+        labyrinth_statistics = {
+            "number_of_nodes" : 0,
+            "number_of_empty_nodes" : 0,
+            "number_of_walls" : 0,
+            "number_of_lines" : 0,
+            "number_of_columns" : 0,
+            "distance_between_start_and_end_point" : 0,
+            "distance_between_agent_and_end_point" : 0,
+            "number_of_moves_done_by_agent" : 0
+        }
+
+        return labyrinth_statistics
+
+
+
+    def set_labyrinth_statistics_from_labyrinth(self):
+        """Set the dictionary of statistics about the labyrinth"""
+
+        self.labyrinth_statistics["number_of_walls"] = len(self.list_wall_nodes)
+        self.labyrinth_statistics["number_of_empty_nodes"] = len(self.list_empty_nodes)
+        self.labyrinth_statistics["number_of_lines"] = len(self.labyrinth_nodes)
+        self.labyrinth_statistics["number_of_columns"] = len(self.labyrinth_nodes[0])
+        self.labyrinth_statistics["number_of_moves_done_by_agent"] = 0
+        self.labyrinth_statistics["number_of_nodes"] = self.labyrinth_statistics["number_of_lines"]*self.labyrinth_statistics["number_of_columns"]
+
+        #We calculate the distance between the agent node and the exit node with breadth first search
+        self.breadth_first_search(self.agent_node)
+        self.labyrinth_statistics["distance_between_agent_and_end_point"] = self.exit_point.distance_from_start_point
+
+        #We calculate the distance between the start node and the exit node with breadth first search
+        self.breadth_first_search(self.start_point)
+        self.labyrinth_statistics["distance_between_start_and_end_point"] = self.exit_point.distance_from_start_point
 
 
 

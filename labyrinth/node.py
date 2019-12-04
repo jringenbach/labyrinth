@@ -5,6 +5,7 @@ from labyrinth.element import Element
 class Node:
 
 
+
     def __init__(self, num, labyrinth_position=None, elements=None):
         """Node which is a cell in the labyrinth
         

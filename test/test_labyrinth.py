@@ -70,7 +70,7 @@ def test_find_node_to_move_on():
             node_to_test = node
 
     #We get the node we are supposed to get with find_node_to_move_on
-    lab.initialization_list_empty_nodes(lab.total_node)
+    lab.initialization_list_empty_nodes(lab.labyrinth_statistics["number_of_nodes"])
     lab.breadth_first_search(lab.agent_node)
     node_to_move_on = lab.find_node_to_move_on(lab.exit_point)
 
@@ -189,3 +189,44 @@ def test_set_datas_from_labyrinth():
     node_1 = Node(5, (1,1))
 
     assert lab.list_empty_nodes[0].num == node_1.num and lab.list_empty_nodes[0].labyrinth_position == node_1.labyrinth_position
+
+
+
+def test_set_empty_labyrinth_statistics():
+    """Test the method Labyrinth.set_empty_labyrinth_statistics"""
+
+    dictionary_test = {
+        "number_of_nodes" : 0,
+        "number_of_empty_nodes" : 0,
+        "number_of_walls" : 0,
+        "number_of_lines" : 0,
+        "number_of_columns" : 0,
+        "distance_between_start_and_end_point" : 0,
+        "distance_between_agent_and_end_point" : 0,
+        "number_of_moves_done_by_agent" : 0
+    }
+
+    lab = Labyrinth()
+    lab.set_empty_labyrinth_statistics()
+
+    assert lab.labyrinth_statistics == dictionary_test
+
+
+
+def test_labyrinth_statistics_from_labyrinth():
+    """Test the method Labyrinth.set_labyrinth_statistics_from_labyrinth"""
+
+    lab = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+
+    labyrinth_statistics_test = {
+        "number_of_nodes" : 30,
+        "number_of_empty_nodes" : 9,
+        "number_of_walls" : 21,
+        "number_of_lines" : 6,
+        "number_of_columns" : 5,
+        "distance_between_start_and_end_point" : 5,
+        "distance_between_agent_and_end_point" : 5,
+        "number_of_moves_done_by_agent" : 0      
+    }
+
+    assert lab.labyrinth_statistics == labyrinth_statistics_test
