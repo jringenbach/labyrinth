@@ -2,19 +2,21 @@ from labyrinth.labyrinth import Labyrinth
 from labyrinth.node import Node
 
 def test_breadth_first_search():
-    """Test labyrinth.breadth_first_search(start_point) algorithm"""
+    """Test labyrinth.breadth_first_search(start_point) algorithm. The result must be that every node.distance_from_start_point
+    must be set with the right distance from the start point used in the breadth first search algorithm"""
 
     labyrinth = Labyrinth()
 
+    #We set the nodes that we will test
     node_1 = Node(1)
     node_2 = Node(2)
     node_3 = Node(3)
     node_4 = Node(4)
     number_of_nodes = 4
 
+    #We add those nodes to our labyrinth
     list_empty_nodes = [node_1, node_2, node_3, node_4]
     labyrinth.list_empty_nodes = list_empty_nodes
-    labyrinth.initialization_list_empty_nodes(number_of_nodes)
 
     #We represent the graph |1| - |2| - |3| - |4|
     node_1.set_connected_to(node_2)

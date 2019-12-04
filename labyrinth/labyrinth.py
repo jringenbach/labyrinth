@@ -89,8 +89,9 @@ class Labyrinth:
         """This method is looking for the node where the agent must move depending on the breadth first search done
         just before"""
 
+        #We start from the node where the agent must go, and we climb up through each father of each node to reach
+        #the agent position which is set with distance_from_start_point = 0
         while(node.pere is not None and node.pere.distance_from_start_point > 0):
-            print(node.labyrinth_position)
             node = node.pere
 
         return node
@@ -153,6 +154,7 @@ class Labyrinth:
             self.breadth_first_search()
             node_to_move_on = self.find_node_to_move_on(self.exit_point)
             self.set_datas_after_move(node_to_move_on)
+            self.print_labyrinth()
 
 
 
@@ -189,8 +191,6 @@ class Labyrinth:
                        
                     
 
-
-
     def set_connection_between_nodes(self):
         """Set every attributes connected_to for every node in self.list_empty_nodes. It establishes the connection between nodes."""
 
@@ -226,9 +226,9 @@ class Labyrinth:
 
 
 
-
     def set_datas_from_labyrinth(self):
-        """Create the list of nodes depending on the labyrinth read in a xls file and set self.start_point and self.exit_point"""
+        """Create the list of nodes depending on the labyrinth read in a xls file and set self.start_point and self.exit_point
+        and self.agent_node"""
 
         node_number = 1
 
