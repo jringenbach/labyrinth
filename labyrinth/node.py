@@ -91,6 +91,17 @@ class Node:
             return False
 
 
+    def position_is_equal_to(self, other_node):
+        """Test if the position of this node is equal to an other node position. Return True if it is, False else.
+        
+        other_node (Node) : node we test"""
+
+        if self.labyrinth_position == other_node.labyrinth_position:
+            return True
+        else:
+            return False
+
+
 
     def remove_element(self, element_to_remove):
         """Remove an element from the list of elements of this node.

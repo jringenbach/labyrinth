@@ -11,7 +11,7 @@ class Labyrinth:
 
 
 
-    def __init__(self, file_name=None):
+    def __init__(self, file_name=None, labyrinth=list()):
         """
         file_name (str) : name of the file where the labyrinth is saved
         labyrinth (list) : list of every line of the labyrinth
@@ -27,7 +27,7 @@ class Labyrinth:
         self.file_name = file_name
         self.list_empty_nodes = list()
         self.list_wall_nodes = list()
-        self.labyrinth = list()
+        self.labyrinth = labyrinth
         self.labyrinth_nodes = list()
         self.start_point = None
         self.agent_node = None
@@ -35,23 +35,15 @@ class Labyrinth:
         self.total_node = 0
 
         #If a file_name is given to get the labyrinth, we get the labyrinth and set the list of nodes
-        if self.file_name is not None:
+        if self.file_name is not None and len(labyrinth) == 0:
             self.labyrinth = self.get_labyrinth_from_file_name(self.file_name)
             self.set_datas_from_labyrinth()
             self.set_connection_between_nodes()
 
-
-
-
-    def initialization_list_empty_nodes(self, n):
-        """Initialize all the nodes in self.list_empty_nodes for the BFS algorithm
-        
-        n : number of nodes, so it represents the maximum distance that cannot be reached with BFS algorithm"""
-
-        for node in self.list_empty_nodes:
-            node.status = 0
-            node.distance_from_start_point = n+1
-            node.pere = None
+        #If a labyrinth is given as its list form in parameter of __init__
+        elif len(labyrinth) > 0 and self.file_name is None:
+            self.set_datas_from_labyrinth()
+            self.set_connection_between_nodes()          
 
 
 
@@ -84,7 +76,38 @@ class Labyrinth:
             node_to_analyze.status = 2
 
 
-    
+
+    def equals_list_nodes(self, self_list_nodes, other_list_nodes):
+        """Test if this labyrinth list of nodes is equal to an other list of nodes. Return True if the lists are the same, False else.
+        
+        other_list_empty_nodes (list) : list of Node object"""
+
+        #If the two list of nodes have different lengths, they are automatically different
+        if len(self_list_nodes) != len(other_list_nodes):
+            return False
+        else:
+
+            #We sort both list of nodes
+            self_list_nodes = sorted(self_list_nodes, key=lambda x : x.num)
+            other_list_nodes = sorted(other_list_nodes, key=lambda x : x.num)
+
+            #For each node in both lists
+            for i, node in enumerate(self_list_nodes):
+
+                #We check if the length of the list of the nodes they are connected to are the same
+                if len(node.connected_to) != len(other_list_nodes[i].connected_to):
+                    return False
+                else:
+                    #We check if the connection between the nodes in both list is the same
+                    node_connected_to = sorted(node.connected_to, key=lambda x : x.num)
+                    other_node_connected_to = sorted(self_list_nodes[i].connected_to, key=lambda x : x.num)
+                    for j, node_connec in enumerate(node_connected_to):
+                        if node_connec.num != other_node_connected_to[j].num:
+                            return False
+            return True
+
+
+
     def find_node_to_move_on(self, node):
         """This method is looking for the node where the agent must move depending on the breadth first search done
         just before"""
@@ -95,38 +118,6 @@ class Labyrinth:
             node = node.pere
 
         return node
-
-
-
-    def equals_list_empty_nodes(self, other_list_empty_nodes):
-        """Test if this labyrinth list of nodes is equal to an other list of nodes. Return True if the lists are the same, False else.
-        
-        other_list_empty_nodes (list) : list of Node object"""
-
-        #If the two list of nodes have different lengths, they are automatically different
-        if len(self.list_empty_nodes) != len(other_list_empty_nodes):
-            return False
-        else:
-
-            #We sort both list of nodes
-            list_empty_nodes = sorted(self.list_empty_nodes, key=lambda x : x.num)
-            other_list_empty_nodes = sorted(other_list_empty_nodes, key=lambda x : x.num)
-
-            #For each node in both lists
-            for i, node in enumerate(list_empty_nodes):
-
-                #We check if the length of the list of the nodes they are connected to are the same
-                if len(node.connected_to) != len(other_list_empty_nodes[i].connected_to):
-                    return False
-                else:
-                    #We check if the connection between the nodes in both list is the same
-                    node_connected_to = sorted(node.connected_to, key=lambda x : x.num)
-                    other_node_connected_to = sorted(list_empty_nodes[i].connected_to, key=lambda x : x.num)
-                    for j, node_connec in enumerate(node_connected_to):
-                        if node_connec.num != other_node_connected_to[j].num:
-                            return False
-            return True
-                        
 
 
 
@@ -146,6 +137,32 @@ class Labyrinth:
 
 
 
+    def initialization_list_empty_nodes(self, n):
+        """Initialize all the nodes in self.list_empty_nodes for the BFS algorithm
+        
+        n : number of nodes, so it represents the maximum distance that cannot be reached with BFS algorithm"""
+
+        for node in self.list_empty_nodes:
+            node.status = 0
+            node.distance_from_start_point = n+1
+            node.pere = None
+
+
+    
+    def is_equal_to(self, another_labyrinth):
+        """Test if this labyrinth is the same as another_labyrinth. If it is, it returns True, else False"""
+        
+        if self.equals_list_nodes(self.list_empty_nodes, another_labyrinth.list_empty_nodes) and \
+        self.equals_list_nodes(self.list_wall_nodes, another_labyrinth.list_wall_nodes) and \
+        self.start_point.position_is_equal_to(another_labyrinth.start_point) and \
+        self.exit_point.position_is_equal_to(another_labyrinth.exit_point):
+            return True
+        
+        else:
+            return False
+
+
+
     def move_to_exit(self):
         """Move the Agent through the labyrinth to reach the exit point"""
         
@@ -155,21 +172,6 @@ class Labyrinth:
             node_to_move_on = self.find_node_to_move_on(self.exit_point)
             self.set_datas_after_move(node_to_move_on)
             self.print_labyrinth()
-
-
-
-
-    def print_list_of_nodes(self):
-        """Print details of every node with information collected after BFS algorithm"""
-
-        for node in self.list_empty_nodes:
-            print("--------------------------")
-            print("Node num : "+str(node.num))
-            print("Node distance from start point : "+str(node.distance_from_start_point))
-            if node.pere is None:
-                print("Pas de père")
-            else:
-                print("Num du père : "+str(node.pere.num))
 
 
 
@@ -188,6 +190,20 @@ class Labyrinth:
                         if element.name == "Agent":
                             print(element.symbol, end="")
             print()
+
+
+
+    def print_list_of_nodes(self):
+        """Print details of every node with information collected after BFS algorithm"""
+
+        for node in self.list_empty_nodes:
+            print("--------------------------")
+            print("Node num : "+str(node.num))
+            print("Node distance from start point : "+str(node.distance_from_start_point))
+            if node.pere is None:
+                print("Pas de père")
+            else:
+                print("Num du père : "+str(node.pere.num))
                        
                     
 

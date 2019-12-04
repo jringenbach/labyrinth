@@ -34,7 +34,7 @@ def test_breadth_first_search():
     assert node_4.distance_from_start_point == 2
 
 
-def test_equals_list_empty_nodes():
+def test_equals_list_nodes():
     """Test the method Labyrinth.equals_list_empty_nodes()"""
 
     #We create our labyrinth that will calculate connections between its nodes
@@ -54,8 +54,8 @@ def test_equals_list_empty_nodes():
     list_empty_nodes_2 = [node_1, node_2]
 
     #We test if the two lists of nodes are equal
-    assert lab.equals_list_empty_nodes(list_empty_nodes) == True
-    assert lab.equals_list_empty_nodes(list_empty_nodes_2) == False
+    assert lab.equals_list_nodes(lab.list_empty_nodes, list_empty_nodes) == True
+    assert lab.equals_list_nodes(lab.list_empty_nodes, list_empty_nodes_2) == False
 
 
 
@@ -88,6 +88,36 @@ def test_get_labyrinth_from_file_name():
     labyrinth_to_test.append(["X", "", "", "E", "X"])
     labyrinth_to_test.append(["X", "X", "X", "X", "X"])
     assert lab.labyrinth == labyrinth_to_test
+
+
+
+def test__init__():
+    """Test the __init__ method of a labyrinth"""
+
+    #We instanciate two labyrinths lab_1 and lab_2. lab_1 will be set from an excel file and lab_2
+    #will be set from a given labyrinth under the form of a list
+    labyrinth_2 = [["X", "X", "X", "X", "X"], ["X", "S", "", "", "X"], ["X", "", "X", "", "X"]]
+    labyrinth_2.append(["X", "", "X", "X", "X"])
+    labyrinth_2.append(["X", "", "", "E", "X"])
+    labyrinth_2.append(["X", "X", "X", "X", "X"])
+
+    lab_1 = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    lab_2 = Labyrinth(labyrinth=labyrinth_2)
+
+
+
+def test_is_equal_to():
+    """Test the method Labyrinth.is_equal_to(another_labyrinth)"""
+
+    labyrinth_2 = [["X", "X", "X", "X", "X"], ["X", "S", "", "", "X"], ["X", "", "X", "", "X"]]
+    labyrinth_2.append(["X", "", "X", "X", "X"])
+    labyrinth_2.append(["X", "", "", "E", "X"])
+    labyrinth_2.append(["X", "X", "X", "X", "X"])
+
+    lab_1 = Labyrinth(file_name="test/test_model_labyrinth/lab.xls")
+    lab_2 = Labyrinth(labyrinth=labyrinth_2)
+
+    assert lab_1.is_equal_to(lab_2) == True
 
 
 
@@ -126,7 +156,7 @@ def test_set_connection_between_nodes():
     list_empty_nodes_test = [node_1, node_2, node_3, node_4, node_5]
 
     lab.set_connection_between_nodes()
-    assert lab.equals_list_empty_nodes(list_empty_nodes_test) == True
+    assert lab.equals_list_nodes(lab.list_empty_nodes, list_empty_nodes_test) == True
 
 
 

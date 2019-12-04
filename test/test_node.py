@@ -37,8 +37,22 @@ def test_is_equal_to():
     node_3 = Node(1)
     nodes_not_equal = node_1.is_equal_to(node_2)
     nodes_equal = node_1.is_equal_to(node_3)
+
     assert nodes_not_equal == False
     assert nodes_equal == True
+
+
+
+def test_position_is_equal_to():
+    """Test the method Node.position_is_equal_to(another_node)"""
+
+    node_1 = Node(1, (1,2))
+    node_2 = Node(2, (1,2))
+    node_3 = Node(3, (2,2))
+
+    assert node_1.position_is_equal_to(node_2) == True
+    assert node_1.position_is_equal_to(node_3) == False
+
 
 
 def test_remove_element():
