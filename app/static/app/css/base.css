@@ -1,0 +1,22 @@
+body{
+    height : 100%;
+}
+
+#content{
+    background-color : beige;
+    height : 90%;
+}
+
+#foot{
+    background-color : black;
+    height : 5%;
+}
+
+#navigationbar{
+    background-color : black;
+    height : 5%;
+}
+
+#web-page{
+    height : 100%;
+}

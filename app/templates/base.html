@@ -1,18 +1,46 @@
 <html>
     <head>
+        <link href="{{ url_for('static', filename='app/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='app/css/bootstrap.min.css.map') }}" rel="stylesheet" type="text/css" />
         <link href="{{ url_for('static', filename='app/css/base.css') }}" rel="stylesheet" type="text/css" />
 
         {% block css_script %}
         {% endblock %}
 
     </head>
-    
-    <body>
 
-        {% block content %}
+    <body>
+        <div id="web-page">
+            <!--Navigation bar on top of the web pages-->
+            <div class="container-fluid row" id="navigationbar">
+
+            </div>
+    
+            <!--Content of the web pages-->
+            <div class="container-fluid row" id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+    
+            <!--Foot of the web pages-->
+            <div class="container-fluid row" id="foot">
+                {% block foot %}
+                {% endblock %}
+            </div>
+        </div>
+
+          
+
+
+        
+        <script src="{{ url_for('static', filename='app/js/jquery-3.4.1.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='app/js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='app/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='app/js/bootstrap.min.js.map') }}"></script>
+        <script src="{{ url_for('static', filename='app/js/base.js') }}"></script>
+
+        {% block js_script %}
         {% endblock %}
 
-
-        <script src="{{ url_for('static', filename='app/js/base.js') }}"></script>
     </body>
 </html>
